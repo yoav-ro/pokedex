@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="pokedex.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <input id="nameInput" type="text" placeholder="Search Pokemon!">
+    <button onclick="getPokemon(document.getElementById('nameInput').value)">Submit</button>
+    <div id="pokemonInfo">
+        WHO IS THAT POKEMON?
+        <p id="name"></p>
+        <p id="height"></p>
+        <p id="weight"></p>
+        <img id="image">
+    </div>
+</body>
+</html>
