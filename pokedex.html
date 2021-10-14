@@ -10,13 +10,16 @@
 </head>
 <body>
     <input id="nameInput" type="text" placeholder="Search Pokemon!">
-    <button onclick="getPokemon(document.getElementById('nameInput').value)">Submit</button>
+    <button onclick="getPokemonByName(document.getElementById('nameInput').value)">Submit</button>
     <div id="pokemonInfo">
         WHO IS THAT POKEMON?
         <p id="name"></p>
         <p id="height"></p>
         <p id="weight"></p>
+        <ul id="types">
+        </ul>
         <img id="image">
     </div>
+    <ul id="pokemonByType"></ul>
 </body>
 </html>
