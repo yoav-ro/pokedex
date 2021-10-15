@@ -3,15 +3,20 @@ function getPokemon(pokemonName) {
         alert("Invalid input! No pokemon searched!")
         throw "No pokemon searched"
     }
+    if (!isNaN(pokemonName)) {
+        alert(`Invalid input! ${pokemonName} is not a pokemon!`)
+        throw "Cant search a number"
+    }
     document.getElementById("nameInput").value = pokemonName;
     resetElements("types", "pokemonByType");
     document.getElementById("who").play();
-    
+    setTimeout(() => { getPokemonAudio(pokemonName) }, 3000)
+
     document.body.classList.add("searched")
 
     //axios
     //getPokemonByName(pokemonName);
-    
+
     //Fetch
     getPokemonByNameFetch(pokemonName);
 }
@@ -64,7 +69,7 @@ function buildPokemonEls(pokemonObj) {
     pokeImg.addEventListener("mouseout", () => {
         pokeImg.src = pokemonObj.sprites['front_default'];
     })
-    }
+}
 
 function createTypesList(pokemonObj) {
     const typesArr = pokemonObj.types;
@@ -96,6 +101,14 @@ function pokemonByType(typesObj) {
 
 function resetElements(...elementToReset) {
     for (el of elementToReset) {
-        document.getElementById(`${el}`).innerHTML="";
+        document.getElementById(`${el}`).innerHTML = "";
     }
+}
+
+//Plays the given text using text to speach
+async function getPokemonAudio(pokemonName) {
+    const toSpeak = new SpeechSynthesisUtterance("it is" + pokemonName);
+    const voices = speechSynthesis.getVoices();
+    toSpeak.voice = voices[1];
+    speechSynthesis.speak(toSpeak);
 }
