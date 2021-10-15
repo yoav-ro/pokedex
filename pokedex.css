@@ -1,0 +1,9 @@
+.searched{
+    background-image: url("media/whoIsThat.png");
+    background-repeat: no-repeat;
+}
+
+#pokemonBlock {
+    margin-top: 370px;
+    margin-left: 400px;
+}

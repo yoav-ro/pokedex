@@ -1,3 +1,21 @@
+function getPokemon(pokemonName) {
+    if (pokemonName === "") {
+        alert("Invalid input! No pokemon searched!")
+        throw "No pokemon searched"
+    }
+    document.getElementById("nameInput").value = pokemonName;
+    resetElements("types", "pokemonByType");
+    document.getElementById("who").play();
+    
+    document.body.classList.add("searched")
+
+    //axios
+    //getPokemonByName(pokemonName);
+    
+    //Fetch
+    getPokemonByNameFetch(pokemonName);
+}
+
 //Gets data from PokeAPI
 async function getPokemonByName(pokemonName) {
     const response = axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`);
@@ -10,6 +28,21 @@ async function getPokemonByName(pokemonName) {
         })
 }
 
+async function getPokemonByNameFetch(pokemonName) {
+    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+            }
+        }
+    )
+    const result = await response.json();
+    if (!response.ok) throw Error(result.data)
+    return buildPokemonEls(result);
+}
+
 //Gets a promise and return an object containing the pokemon's data
 function pokemonObject(pokemonPromise) {
     pokemonPromise.then((pokemonObj) => {
@@ -19,7 +52,6 @@ function pokemonObject(pokemonPromise) {
 
 //Recieves an object containing the pokemon's data and fills the html page accordingly
 function buildPokemonEls(pokemonObj) {
-    console.log(pokemonObj)
     document.getElementById("name").textContent = "ITS " + pokemonObj.name.toUpperCase() + "!";
     document.getElementById("weight").textContent = "Weight: " + pokemonObj.weight;
     document.getElementById("height").textContent = "Height: " + pokemonObj.height;
@@ -32,7 +64,7 @@ function buildPokemonEls(pokemonObj) {
     pokeImg.addEventListener("mouseout", () => {
         pokeImg.src = pokemonObj.sprites['front_default'];
     })
-}
+    }
 
 function createTypesList(pokemonObj) {
     const typesArr = pokemonObj.types;
@@ -46,20 +78,24 @@ function createTypesList(pokemonObj) {
 }
 
 async function getPokemonByType(typeUrl) {
-    console.log("click")
     const response = axios.get(typeUrl);
     response.then((value) => {
-        console.log(value)
-        return buildTypesList(value.data.pokemon);
+        return pokemonByType(value.data.pokemon);
     })
 }
 
-function buildTypesList(typesObj) {
+function pokemonByType(typesObj) {
     const list = document.getElementById("pokemonByType");
     for (let i = 0; i < typesObj.length; i++) {
         const pokemonLi = document.createElement("li");
         pokemonLi.textContent = typesObj[i].pokemon.name;
-        pokemonLi.addEventListener("click", () => { getPokemonByName(typesObj[i].pokemon.name) })
+        pokemonLi.addEventListener("click", () => { getPokemon(typesObj[i].pokemon.name) })
         list.append(pokemonLi)
+    }
+}
+
+function resetElements(...elementToReset) {
+    for (el of elementToReset) {
+        document.getElementById(`${el}`).innerHTML="";
     }
 }
