@@ -9,30 +9,41 @@ function getPokemon(pokemonName) {
     }
     document.getElementById("nameInput").value = pokemonName;
     resetElements("types", "pokemonByType");
-    document.getElementById("who").play();
-    setTimeout(() => { getPokemonAudio(pokemonName) }, 3000)
 
     document.body.classList.add("searched")
-
-    //axios
-    //getPokemonByName(pokemonName);
-
-    //Fetch
-    getPokemonByNameFetch(pokemonName);
+    getPokemonFromAPI(pokemonName);
 }
 
-//Gets data from PokeAPI
-async function getPokemonByName(pokemonName) {
-    const response = axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`);
-    response.then((pokemonPromise) => {
-        return pokemonObject(response);
+//
+function getPokemonFromAPI(pokemonName) {
+    //Using fetch
+    //const pokemonPromise = getPokemonByNameFetch(pokemonName);
+
+    //Using axsion
+    const pokemonPromise = getPokemonByNameAxios(pokemonName);
+    checkPromise(pokemonPromise, pokemonName);
+}
+
+//If the promise is fullfieled, proceeds to play media and build the elements. Else, throws an error 
+function checkPromise(pokemonPromise, pokemonName) {
+    pokemonPromise.then((pokemonObj) => {
+        playMedia(pokemonName);
+        return buildPokemonEls(pokemonObj);
     })
         .catch((err) => {
-            alert(`Pokemon "${pokemonName}" not found!`)
-            throw err;
+            const errStr = `Pokemon "${pokemonName}" not found!`
+            alert(errStr)
+            throw err + " | " + errStr;
         })
 }
 
+//Plays the audio
+function playMedia(pokemonName) {
+    document.getElementById("who").play();
+    setTimeout(() => { getPokemonAudio(pokemonName) }, 3500)
+}
+
+//Gets data from PokeAPI using fetch
 async function getPokemonByNameFetch(pokemonName) {
     const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`,
         {
@@ -44,14 +55,14 @@ async function getPokemonByNameFetch(pokemonName) {
         }
     )
     const result = await response.json();
-    if (!response.ok) throw Error(result.data)
-    return buildPokemonEls(result);
+    return result;
 }
 
-//Gets a promise and return an object containing the pokemon's data
-function pokemonObject(pokemonPromise) {
-    pokemonPromise.then((pokemonObj) => {
-        return buildPokemonEls(pokemonObj.data);
+//Gets data from PokeAPI using Axios
+async function getPokemonByNameAxios(pokemonName) {
+    const response = axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`);
+    return response.then((value) => {
+        return value.data;
     })
 }
 
@@ -71,25 +82,46 @@ function buildPokemonEls(pokemonObj) {
     })
 }
 
+//Creates a list of the the types of the given pokemon
 function createTypesList(pokemonObj) {
     const typesArr = pokemonObj.types;
     const typesList = document.getElementById("types");
     for (let i = 0; i < typesArr.length; i++) {
         const typeLi = document.createElement("li");
         typeLi.textContent = typesArr[i].type.name;
-        typeLi.addEventListener("click", () => { getPokemonByType(typesArr[i].type.url) })
+        //Using axios
+        //typeLi.addEventListener("click", () => { getPokemonByTypeAxios(typesArr[i].type.url) })
+        //Using fetch
+        typeLi.addEventListener("click", () => { getPokemonByTypeFetch(typesArr[i].type.url) })
         typesList.append(typeLi);
     }
 }
 
-async function getPokemonByType(typeUrl) {
+//Gets all the pokemons belonging to the given type usiong Axios
+async function getPokemonByTypeAxios(typeUrl) {
     const response = axios.get(typeUrl);
     response.then((value) => {
         return pokemonByType(value.data.pokemon);
     })
 }
 
+async function getPokemonByTypeFetch(typeUrl) {
+    const response = await fetch(typeUrl, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+        }
+    })
+    const result= response.json();
+    result.then((pokemonLst)=>{
+        return pokemonByType(pokemonLst.pokemon);
+    })
+}
+
+//Builds a lists containing all the pokemon of a given type
 function pokemonByType(typesObj) {
+    console.log(typesObj)
     const list = document.getElementById("pokemonByType");
     for (let i = 0; i < typesObj.length; i++) {
         const pokemonLi = document.createElement("li");
@@ -99,6 +131,7 @@ function pokemonByType(typesObj) {
     }
 }
 
+//Removes all child elements from all the given elements
 function resetElements(...elementToReset) {
     for (el of elementToReset) {
         document.getElementById(`${el}`).innerHTML = "";

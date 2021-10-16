@@ -13,24 +13,22 @@
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 
-<body>
+<body class="p-3 mb-2 bg-secondary text-white">
     <audio id="who" src="media\whos-that-pokemon_.mp3"></audio>
-    <section id="pokemonBlock">
-        <input id="nameInput" type="text" placeholder="Search Pokemon!">
-        <button onclick="getPokemon(document.getElementById('nameInput').value)">Submit</button>
-        <div id="pokemonInfo">
-            WHO IS THAT POKEMON?
-            <p id="name"></p>
-            <p id="height"></p>
-            <p id="weight"></p>
-            <ul id="types">
-            </ul>
-            <img id="image">
-        </div>
-    </section>
+    <div id="pokemonBlock">
+        <input id="nameInput" type="text" class="form-control" placeholder="Search Pokemon!">
+        <button class="btn btn-danger" onclick="getPokemon(document.getElementById('nameInput').value)">Submit</button>
+    </div>
+    <div id="pokemonInfo">
+        <p id="name"></p>
+        <p id="height"></p>
+        <p id="weight"></p>
+        <ul id="types">
+        </ul>
+        <img id="image">
+    </div>
 
     <ul id="pokemonByType"></ul>
-
 
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
