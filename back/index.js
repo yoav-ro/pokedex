@@ -1,9 +1,12 @@
 const express = require("express");
+const pokemonRouter = require("./src/routers/pokemonRouter.js")
+const userRouter= require("./src/routers/userRouter.js")
+
 const app = express();
 const port = 8080;
+app.use("/pokemon", pokemonRouter);
+app.use(userRouter);
 
-const pokemonRouter= require("./routers/pokemonRouter.js")
-app.use("/", pokemonRouter);
 
 // start the server
 app.listen(port, () => {
@@ -12,12 +15,5 @@ app.listen(port, () => {
 
 // route our app
 app.get('/', (req, res) => {
-  console.log("Test")
-
   res.send('hello world!');
 });
-
-
-//const pokemonRouter= require("./back/routers/pokemonRouter.js"
-
-//app.use("/pokemon", pokemonRouter);
