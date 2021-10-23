@@ -1,6 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-const { getMaxListeners } = require("process");
 
 //Creates a user folder under ./users
 function createUserFile(userName) {
@@ -38,6 +37,7 @@ function releasePokemon(userName, pokemonId) {
     fs.unlinkSync(deletePath)
 }
 
+//Gets all the pokemon caught by a given user
 function allPokemonBy(userName) {
     const pokemonObjArr = [];
     const userPath= getUserPath(userName);
