@@ -43,6 +43,7 @@ pokemonRouter.put("/catch/:id", async (req, res, next) => {
         const pokemonObj = buildPokemonObj(await pokedex.getPokemonByName(pokemonId))
         if (!fileHelper.pokemonUnderUser(userName, pokemonId)) {
             fileHelper.catchPokemon(userName, pokemonId, pokemonObj);
+            res.json({ message: `${userName} caught pokemon "${pokemonId}"!` })
         }
         else {
             console.error(`Pokemon "${pokemonId}" already caught by ${userName}`)
@@ -61,10 +62,10 @@ pokemonRouter.delete("/release/:id", (req, res, next) => {
     const pokemonId = req.params.id;
     if (fileHelper.pokemonUnderUser(userName, pokemonId)) {
         fileHelper.releasePokemon(userName, pokemonId)
-        res.send(`${userName} released pokemon "${pokemonId}"!`)
+        res.json({ message: `${userName} released pokemon "${pokemonId}"!` })
     }
     else {
-        res.send(`${userName} havent caught pokemon "${pokemonId}"`)
+        console.err(`${userName} havent caught pokemon "${pokemonId}"`)
         errorHandler("403b", req, res, next)
     }
 })
