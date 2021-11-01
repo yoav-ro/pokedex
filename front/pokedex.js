@@ -74,7 +74,6 @@ function releasePokemon(pokemon, userName) {
     })
 }
 
-//
 function getPokemonFromAPI(pokemonName) {
     const pokemonPromise = getPokemonByNameAxios(pokemonName);
     checkPromise(pokemonPromise, pokemonName);
@@ -141,11 +140,12 @@ async function catchPokemon(pokemonName) {
 
 //Creates a list of the the types of the given pokemon
 function createTypesList(pokemonObj) {
+    console.log(pokemonObj)
     const typesArr = pokemonObj.types;
     const typesList = document.getElementById("types");
     for (let i = 0; i < typesArr.length; i++) {
         const typeLi = document.createElement("li");
-        typeLi.textContent = typesArr[i];
+        typeLi.textContent = typesArr[i].type.name;
         typesList.append(typeLi)
     }
 }
