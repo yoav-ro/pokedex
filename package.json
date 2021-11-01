@@ -1,0 +1,30 @@
+{
+  "name": "pokedex",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "cors": "2.8.5",
+    "express": "4.17.1",
+    "path": "0.12.7",
+    "pokedex-promise-v2": "3.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "2.0.14"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yoav-ro/pokedex.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yoav-ro/pokedex/issues"
+  },
+  "homepage": "https://github.com/yoav-ro/pokedex#readme"
+}
