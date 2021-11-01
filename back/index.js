@@ -9,6 +9,10 @@ app.use(cors())
 app.use("/pokemon", pokemonRouter);
 app.use(userRouter);
 
+app.use('/', express.static(path.resolve('./front'))); // serve main path as static dir
+app.get('/', function(req, res) { // serve main path as static file
+  res.sendFile(path.resolve('./front/pokedex.html'))
+});
 
 // start the server
 app.listen(port, () => {
