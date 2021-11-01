@@ -1,1 +1,1 @@
-web: test.js
+web: index.js
