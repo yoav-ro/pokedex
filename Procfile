@@ -1,1 +1,1 @@
-web: node pokedex.html
+web: node pokedex.js
