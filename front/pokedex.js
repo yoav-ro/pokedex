@@ -1,25 +1,81 @@
-function getPokemon(pokemonName) {
-    if (pokemonName === "") {
-        alert("Invalid input! No pokemon searched!")
-        throw "No pokemon searched"
-    }
-    if (!isNaN(pokemonName)) {
-        alert(`Invalid input! ${pokemonName} is not a pokemon!`)
-        throw "Cant search a number"
-    }
-    document.getElementById("nameInput").value = pokemonName;
-    resetElements("types", "pokemonByType");
+let username;
 
-    document.body.classList.add("searched")
-    getPokemonFromAPI(pokemonName);
+function getPokemon(pokemonName) {
+    if (username) {
+        if (pokemonName === "") {
+            alert("Invalid input! No pokemon searched!")
+            throw "No pokemon searched"
+        }
+        if (!isNaN(pokemonName)) {
+            alert(`Invalid input! ${pokemonName} is not a pokemon!`)
+            throw "Cant search a number"
+        }
+        document.getElementById("nameInput").value = pokemonName;
+        resetElements("types", "pokemonByType");
+        document.getElementById("catchBtn").style.visibility = "visible"
+
+        document.body.classList.add("searched")
+        getPokemonFromAPI(pokemonName);
+    }
+    else {
+        alert("You must enter a user name!")
+        throw ("Username wasnt set")
+    }
+}
+
+function setUser(userName) {
+    if (userName) {
+        username = userName;
+        const userInfo = document.getElementById("userInfo");
+        userInfo.style.visibility = "visible"
+        const btn = document.createElement("button");
+        btn.textContent = "Click";
+        userInfo.textContent = `Welcome ${userName}! To see all your pokemon: `
+        btn.addEventListener("click", () => { getPokemonByUser(userName) })
+        userInfo.append(btn)
+    }
+    else {
+        alert("You must enter a user name!")
+        throw ("Username wasnt set")
+    }
+}
+
+function getPokemonByUser(userName) {
+    const response = axios.get("http://localhost:3000/pokemon/", {
+        headers: {
+            username: userName,
+        }
+    })
+    buildPokemonByUser(response)
+}
+
+function buildPokemonByUser(pokemonPromise) {
+    pokemonPromise.then((pokemonData) => {
+        const list = document.getElementById("pokemonByUser");
+        list.textContent = `${username}'s pokemon: `
+        for (let i = 0; i < pokemonData.data.length; i++) {
+            const pokemonLi = document.createElement("li");
+            pokemonLi.textContent = pokemonData.data[i].name;
+            const releaseBtn = document.createElement("button")
+            releaseBtn.textContent = "Release pokemon"
+            releaseBtn.addEventListener("click", () => { releasePokemon(pokemonData.data[i].name, username) })
+            pokemonLi.addEventListener("click", () => { getPokemon(pokemonData.data[i].name) })
+            list.append(pokemonLi);
+            list.append(releaseBtn);
+        }
+    })
+}
+
+function releasePokemon(pokemon, userName) {
+    const response = axios.delete(`http://localhost:3000/pokemon/release/${pokemon}`, {
+        headers: {
+            username: userName,
+        }
+    })
 }
 
 //
 function getPokemonFromAPI(pokemonName) {
-    //Using fetch
-    //const pokemonPromise = getPokemonByNameFetch(pokemonName);
-
-    //Using axsion
     const pokemonPromise = getPokemonByNameAxios(pokemonName);
     checkPromise(pokemonPromise, pokemonName);
 }
@@ -43,24 +99,14 @@ function playMedia(pokemonName) {
     setTimeout(() => { getPokemonAudio(pokemonName) }, 3500)
 }
 
-//Gets data from PokeAPI using fetch
-async function getPokemonByNameFetch(pokemonName) {
-    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`,
-        {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                Accept: "application/json",
-            }
-        }
-    )
-    const result = await response.json();
-    return result;
-}
-
 //Gets data from PokeAPI using Axios
 async function getPokemonByNameAxios(pokemonName) {
-    const response = axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`);
+    const response = axios.get(`http://localhost:3000/pokemon/get/${pokemonName}`, {
+        headers: {
+            username: username,
+        }
+    })
+
     return response.then((value) => {
         return value.data;
     })
@@ -71,14 +117,25 @@ function buildPokemonEls(pokemonObj) {
     document.getElementById("name").textContent = "ITS " + pokemonObj.name.toUpperCase() + "!";
     document.getElementById("weight").textContent = "Weight: " + pokemonObj.weight;
     document.getElementById("height").textContent = "Height: " + pokemonObj.height;
+    document.getElementById("catchBtn").addEventListener("click", () => { catchPokemon(pokemonObj.name) })
     createTypesList(pokemonObj);
     const pokeImg = document.getElementById("image");
-    pokeImg.src = pokemonObj.sprites['front_default'];
+    pokeImg.src = pokemonObj.front_pic;
+    
     pokeImg.addEventListener("mouseover", () => {
-        pokeImg.src = pokemonObj.sprites["back_default"];
+        pokeImg.src = pokemonObj.back_pic;
     })
     pokeImg.addEventListener("mouseout", () => {
-        pokeImg.src = pokemonObj.sprites['front_default'];
+        pokeImg.src = pokemonObj.front_pic;
+    })
+}
+
+async function catchPokemon(pokemonName) {
+    const response = await fetch(`http://localhost:3000/pokemon/catch/${pokemonName}`, {
+        method: "PUT",
+        headers: {
+            username: username
+        }
     })
 }
 
@@ -88,12 +145,8 @@ function createTypesList(pokemonObj) {
     const typesList = document.getElementById("types");
     for (let i = 0; i < typesArr.length; i++) {
         const typeLi = document.createElement("li");
-        typeLi.textContent = typesArr[i].type.name;
-        //Using axios
-        //typeLi.addEventListener("click", () => { getPokemonByTypeAxios(typesArr[i].type.url) })
-        //Using fetch
-        typeLi.addEventListener("click", () => { getPokemonByTypeFetch(typesArr[i].type.url) })
-        typesList.append(typeLi);
+        typeLi.textContent = typesArr[i];
+        typesList.append(typeLi)
     }
 }
 
@@ -105,23 +158,8 @@ async function getPokemonByTypeAxios(typeUrl) {
     })
 }
 
-async function getPokemonByTypeFetch(typeUrl) {
-    const response = await fetch(typeUrl, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-        }
-    })
-    const result= response.json();
-    result.then((pokemonLst)=>{
-        return pokemonByType(pokemonLst.pokemon);
-    })
-}
-
 //Builds a lists containing all the pokemon of a given type
 function pokemonByType(typesObj) {
-    console.log(typesObj)
     const list = document.getElementById("pokemonByType");
     for (let i = 0; i < typesObj.length; i++) {
         const pokemonLi = document.createElement("li");

@@ -15,11 +15,20 @@
 
 <body class="p-3 mb-2 bg-secondary text-white">
     <audio id="who" src="media\whos-that-pokemon_.mp3"></audio>
+    <div id="userInfo" style="visibility: hidden;">
+
+    </div>
     <div id="pokemonBlock">
+        <input id="userInput" type="text" class="form-control" placeholder="Enter user name"
+            style="text-align: center;">
+        <button class="btn btn-danger" onclick="setUser(document.getElementById('userInput').value)">Submit</button>
+        <br> <br>
+
         <input id="nameInput" type="text" class="form-control" placeholder="Search Pokemon!">
         <button class="btn btn-danger" onclick="getPokemon(document.getElementById('nameInput').value)">Submit</button>
     </div>
     <div id="pokemonInfo">
+        <button id="catchBtn" class="btn btn-danger" style="visibility: hidden;">Catch</button>
         <p id="name"></p>
         <p id="height"></p>
         <p id="weight"></p>
@@ -29,7 +38,7 @@
     </div>
 
     <ul id="pokemonByType"></ul>
-
+    <ul id="pokemonByUser"></ul>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
         crossorigin="anonymous"></script>
