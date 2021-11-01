@@ -1,6 +1,7 @@
 const express = require("express");
-const pokemonRouter = require("./src/routers/pokemonRouter.js")
-const userRouter= require("./src/routers/userRouter.js")
+const pokemonRouter = require("./back/src/routers/pokemonRouter.js")
+const userRouter= require("./back/src/routers/userRouter.js")
+const path= require("path")
 const cors= require("cors")
 
 const app = express();

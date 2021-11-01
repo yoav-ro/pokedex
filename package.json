@@ -6,6 +6,7 @@
   "dependencies": {
     "cors": "2.8.5",
     "express": "4.17.1",
+    "path": "0.12.7",
     "pokedex-promise-v2": "3.3.2"
   },
   "devDependencies": {
@@ -13,7 +14,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon back/index.js"
+    "dev": "nodemon index.js"
   },
   "repository": {
     "type": "git",
