@@ -41,8 +41,8 @@ function setUser(userName) {
 }
 
 function getPokemonByUser(userName) {
-    //localhost: "/pokemon/"
-    const response = axios.get("http://localhost:3000/pokemon/", {
+    //localhost: "http://localhost:3000/pokemon/"
+    const response = axios.get("/pokemon/", {
         headers: {
             username: userName,
         }
