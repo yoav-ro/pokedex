@@ -41,6 +41,7 @@ function setUser(userName) {
 }
 
 function getPokemonByUser(userName) {
+    //localhost: "/pokemon/"
     const response = axios.get("http://localhost:3000/pokemon/", {
         headers: {
             username: userName,
@@ -67,7 +68,8 @@ function buildPokemonByUser(pokemonPromise) {
 }
 
 function releasePokemon(pokemon, userName) {
-    const response = axios.delete(`http://localhost:3000/pokemon/release/${pokemon}`, {
+    //localhost: `http://localhost:3000/pokemon/release/${pokemon}`
+    const response = axios.delete(`/pokemon/release/${pokemon}`, {
         headers: {
             username: userName,
         }
@@ -101,7 +103,8 @@ function playMedia(pokemonName) {
 
 //Gets data from PokeAPI using Axios
 async function getPokemonByNameAxios(pokemonName) {
-    const response = axios.get(`http://localhost:3000/pokemon/get/${pokemonName}`, {
+    //localhost: `/pokemon/get/${pokemonName}`
+    const response = axios.get(`/pokemon/get/${pokemonName}`, {
         headers: {
             username: username,
         }
@@ -131,7 +134,8 @@ function buildPokemonEls(pokemonObj) {
 }
 
 async function catchPokemon(pokemonName) {
-    const response = await fetch(`http://localhost:3000/pokemon/catch/${pokemonName}`, {
+    //local host: "`http://localhost:3000/pokemon/catch/${pokemonName}`"
+    const response = await fetch(`/pokemon/catch/${pokemonName}`, {
         method: "PUT",
         headers: {
             username: username
